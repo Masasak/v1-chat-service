@@ -1,0 +1,25 @@
+with-expecter: true
+disable-version-string: true
+dir: "test/mock"
+outpkg: mocks
+
+packages:
+  github.com/Masasak/v1-chat-service/internal/port/helper:
+    config:
+      recursive: true
+      all: true
+      filename: "mock_{{ .PackageName }}_{{ .InterfaceName | snakecase }}.go"
+      mockname: "{{ .PackageName | camelcase }}{{ .InterfaceName }}"
+
+  github.com/Masasak/v1-chat-service/internal/port/service:
+    config:
+      recursive: true
+      all: true
+      filename: "mock_{{ .InterfaceName | snakecase }}.go"
+      mockname: "{{ .InterfaceName }}"
+  github.com/Masasak/v1-chat-service/internal/port/repo:
+    config:
+      recursive: true
+      all: true
+      filename: "mock_{{ .InterfaceName | snakecase }}.go"
+      mockname: "{{ .InterfaceName }}"
