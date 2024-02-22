@@ -16,12 +16,11 @@ type txKey struct{}
 
 // Extract extracts UnionTx from context.
 func Extract(ctx context.Context) *UnionTx {
-	utx := ctx.Value(txKey{}).(*UnionTx)
-	if utx == nil {
-		// TODO: Panic or do something.
-		return nil
+	if utx, ok := ctx.Value(txKey{}).(*UnionTx); ok {
+		return utx
 	}
-	return utx
+	// TODO: Panic or do something.
+	return nil
 }
 
 // UnionTx is union of transactions.

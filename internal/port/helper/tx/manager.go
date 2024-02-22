@@ -6,7 +6,12 @@ import (
 	"fmt"
 )
 
+// TODO: Make it into interface if needed.
 type Manager struct{}
+
+func NewManager() *Manager {
+	return &Manager{}
+}
 
 // Begin creates a new UnionTx and injects it into context.
 func (m *Manager) Begin(ctx context.Context) context.Context {
@@ -17,7 +22,7 @@ func (m *Manager) Begin(ctx context.Context) context.Context {
 // Evaluate decides whether to commit or rollback the transaction depending on the state of the error.
 // When it meets panic, it rollbacks the transaction and produces panic again.
 // If execution of commit or rollback fails, it appends its error to given error.
-// It is recommended to call it as deferred statement right after the excution of Begin.
+// It is recommended to call it as deferred statement right after the execution of Begin.
 func (m *Manager) Evaluate(ctx context.Context, err *error) {
 	if e := recover(); e != nil {
 		err := fmt.Errorf("panic during transaction: %v", err)
