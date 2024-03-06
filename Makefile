@@ -1,6 +1,8 @@
 .PHONY: mocks
 mocks:
 	mockery --config=./config/.mockery.yml
+lint:
+	golangci-lint run --config=./config/.golangci.yml
 
 UNIT_TEST_PACKAGES := $(shell go list ./... | grep -v /test)
 .PHONY: unit-test
