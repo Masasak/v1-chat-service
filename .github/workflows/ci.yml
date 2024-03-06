@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+
+      - name: Set up mockery
+        run: go install github.com/vektra/mockery/v2@v2.42.0
+
+      - name: Create mocks
+        run: make mocks
+
+      - name: Generate files
+        run: make generate
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          args: --config=./config/.golangci.yml
+          only-new-issues: true
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+  
+      - name: Set up mockery
+        run: go install github.com/vektra/mockery/v2@v2.42.0
+  
+      - name: Create mocks
+        run: make mocks
+  
+      - name: Generate files
+        run: make generate
+
+      - name: Test
+        run: make unit-test
+
+    #   - name: Upload coverage reports to Codecov
+    #     uses: codecov/codecov-action@v3
+    #     with:
+    #       token: ${{ secrets.CODECOV_TOKEN }}
+    #       files: unit.out
