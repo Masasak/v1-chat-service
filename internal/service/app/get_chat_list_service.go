@@ -18,6 +18,8 @@ type getChatListService struct {
 	txManager   *tx.Manager
 }
 
+var _ app.GetChatListService = (*getChatListService)(nil)
+
 func NewGetChatListService(
 	tm *tx.Manager, csvc domain.ChatService,
 	msvc domain.MessageService, usvc domain.UserService,
@@ -25,14 +27,14 @@ func NewGetChatListService(
 	return &getChatListService{
 		chatService: csvc,
 		msgService:  msvc,
+		userService: usvc,
 		txManager:   tm,
 	}
 }
 
-func (svc *getChatListService) Execute(ctx context.Context, input app.GetChatListInput) (app.GetChatListOutput, error) {
+func (svc *getChatListService) Execute(ctx context.Context, input app.GetChatListInput) (_ app.GetChatListOutput, err error) {
 	info := auth.MustExtract(ctx)
 
-	var err error
 	ctx = svc.txManager.Begin(ctx)
 	defer svc.txManager.Evaluate(ctx, &err)
 
@@ -46,7 +48,7 @@ func (svc *getChatListService) Execute(ctx context.Context, input app.GetChatLis
 	chatInfo := svc.msgService.FetchUserInfo(ctx, info.UserID, chatIDs)
 	opponents := svc.userService.FetchOpponents(ctx, info.UserID, chats)
 
-	return svc.transform(chats, chatInfo, opponents), err
+	return svc.transform(chats, chatInfo, opponents), nil
 }
 
 func (svc *getChatListService) transform(chats []*model.Chat, chatInfo map[uuid.UUID]domain.UserChatInfo, opponents map[uuid.UUID]model.User) (out app.GetChatListOutput) {

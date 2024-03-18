@@ -17,6 +17,8 @@ type getRandomChatListService struct {
 	txManager         *tx.Manager
 }
 
+var _ app.GetRandomChatListService = (*getRandomChatListService)(nil)
+
 func NewGetRandomChatListService(tm *tx.Manager, rsvc domain.RandomChatService, msvc domain.MessageService) *getRandomChatListService {
 	return &getRandomChatListService{
 		randomChatService: rsvc,
@@ -25,10 +27,9 @@ func NewGetRandomChatListService(tm *tx.Manager, rsvc domain.RandomChatService, 
 	}
 }
 
-func (svc *getRandomChatListService) Execute(ctx context.Context, input app.GetRandomChatListInput) (app.GetRandomChatListOutput, error) {
+func (svc *getRandomChatListService) Execute(ctx context.Context, input app.GetRandomChatListInput) (_ app.GetRandomChatListOutput, err error) {
 	info := auth.MustExtract(ctx)
 
-	var err error
 	ctx = svc.txManager.Begin(ctx)
 	defer svc.txManager.Evaluate(ctx, &err)
 
@@ -40,7 +41,7 @@ func (svc *getRandomChatListService) Execute(ctx context.Context, input app.GetR
 	}
 
 	chatInfo := svc.msgService.FetchUserInfo(ctx, info.UserID, chatIDs)
-	return svc.transform(chats, chatInfo), err
+	return svc.transform(chats, chatInfo), nil
 }
 
 func (svc *getRandomChatListService) transform(chats []*model.RandomChat, chatInfo map[uuid.UUID]domain.UserChatInfo) (out app.GetRandomChatListOutput) {
