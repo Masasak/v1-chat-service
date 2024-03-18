@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -27,4 +28,8 @@ type ChatListElem struct {
 
 type GetChatListOutput struct {
 	Chats []ChatListElem `json:"chats"`
+}
+
+type GetChatListService interface {
+	Execute(ctx context.Context, input GetChatListInput) (output GetChatListOutput, err error)
 }

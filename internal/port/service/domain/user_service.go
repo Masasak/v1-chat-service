@@ -9,4 +9,5 @@ import (
 
 type UserService interface {
 	FetchOpponents(ctx context.Context, userID uuid.UUID, chats []*model.Chat) map[uuid.UUID]model.User
+	Exists(ctx context.Context, userID uuid.UUID) bool
 }
