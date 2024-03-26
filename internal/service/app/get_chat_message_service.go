@@ -48,9 +48,9 @@ func (svc *getChatMessageService) Execute(ctx context.Context, input app.GetChat
 }
 
 func (svc *getChatMessageService) transform(msgs []*model.Message) (out app.GetChatMessageOutput) {
-	out.Messages = make([]app.MessageListElem, len(msgs))
+	out.Messages = make([]app.ChatMessageListElem, len(msgs))
 	for idx, msg := range msgs {
-		out.Messages[idx] = app.MessageListElem{
+		out.Messages[idx] = app.ChatMessageListElem{
 			ID:        msg.ID,
 			CreatedAt: msg.CreatedAt,
 			AuthorID:  msg.AuthorID,

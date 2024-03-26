@@ -12,7 +12,7 @@ type GetChatMessageInput struct {
 	Oldest time.Time
 }
 
-type MessageListElem struct {
+type ChatMessageListElem struct {
 	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	AuthorID  uuid.UUID `json:"authorId"`
@@ -20,7 +20,7 @@ type MessageListElem struct {
 }
 
 type GetChatMessageOutput struct {
-	Messages []MessageListElem `json:"mssages"`
+	Messages []ChatMessageListElem `json:"mssages"`
 }
 
 type GetChatMessageService interface {
