@@ -3,6 +3,7 @@ package app_svc
 import (
 	"context"
 	"net/http"
+	"slices"
 
 	"github.com/Masasak/v1-chat-service/internal/model"
 	"github.com/Masasak/v1-chat-service/internal/port/err/status"
@@ -41,15 +42,8 @@ func (svc *getRandomChatMessageService) Execute(ctx context.Context, input app.G
 		return app.GetRandomChatMessageOutput{}, status.NewErr(http.StatusNotFound, "chat not found")
 	}
 
-	found := false
-	for _, userID := range chat.UserIDs {
-		if info.UserID == userID {
-			found = true
-			break
-		}
-	}
-
-	if !found {
+	isParticipant := slices.Contains(chat.UserIDs, info.UserID)
+	if !isParticipant {
 		return app.GetRandomChatMessageOutput{}, status.NewErr(http.StatusForbidden, "you are not participant")
 	}
 
