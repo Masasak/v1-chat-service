@@ -15,12 +15,12 @@ type GetRandomChatMessageInput struct {
 type RandomChatMessageListElem struct {
 	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
-	FromName  string    `json:"fronName"`
+	FromName  string    `json:"fromName"`
 	Message   string    `json:"message"`
 }
 
 type GetRandomChatMessageOutput struct {
-	Messages []RandomChatMessageListElem `json:"mssages"`
+	Messages []RandomChatMessageListElem `json:"message"`
 }
 
 type GetRandomChatMessageService interface {
